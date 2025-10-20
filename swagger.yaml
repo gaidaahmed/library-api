@@ -1,0 +1,146 @@
+swagger: "2.0"
+info:
+  description: "This is an api for a library project that will be used in our SLO course."
+  version: "v0.0.2"
+  title: "Library API Spec"
+schemes:
+  - "http"
+  - "https"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+paths:
+  /v1/book:
+    get:
+      tags: ["Book"]
+      operationId: list_books
+      parameters: []
+      responses:
+        "200":
+          description: "A successful response and a list of books is returned."
+          schema:
+            $ref: "#/definitions/ListBooksResponse"
+
+    post:
+      tags: ["Book"]
+      operationId: create_book
+      parameters:
+        - in: "body"
+          name: "book"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateBookRequest"
+      responses:
+        "200":
+          description: "A successful response and a book is created."
+          schema:
+            $ref: "#/definitions/CreateBookResponse"
+        "403":
+          description: "Another book with the same ID exists"
+          schema:
+            $ref: "#/definitions/CreateBookResponse"
+
+  /v1/book/{bookID}:
+    parameters:
+      - name: "bookID"
+        in: "path"
+        required: true
+        type: "string"
+
+    get:
+      tags: ["Book"]
+      operationId: get_book
+      responses:
+        "200":
+          description: "The requested book."
+          schema:
+            $ref: "#/definitions/Book"
+        "404":
+          description: "Book not found."
+
+    put:
+      tags: ["Book"]
+      operationId: update_book
+      parameters:
+        - in: "body"
+          name: "book"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateBookRequest"
+      responses:
+        "200":
+          description: "Book updated."
+          schema:
+            $ref: "#/definitions/Book"
+        "404":
+          description: "Book not found."
+
+    delete:
+      tags: ["Book"]
+      operationId: delete_book
+      responses:
+        "200":
+          description: "A successful response and the book is deleted."
+          schema:
+            $ref: "#/definitions/DeleteBookResponse"
+        "404":
+          description: "Book not found."
+
+definitions:
+  CreateBookRequest:
+    type: "object"
+    properties:
+      bookID:
+        type: "string"
+      bookDescription:
+        type: "string"
+      bookTitle:
+        type: "string"
+      bookAuthor:
+        type: "string"
+    example:
+      bookDescription: "bookDescription"
+      bookAuthor: "bookAuthor"
+      bookID: "bookID"
+      bookTitle: "bookTitle"
+
+  CreateBookResponse:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+      message:
+        type: "string"
+    example:
+      message: "message"
+      status: "status"
+
+  ListBooksResponse:
+    type: "array"
+    items:
+      $ref: "#/definitions/Book"
+
+  Book:
+    type: "object"
+    properties:
+      bookID:
+        type: "string"
+      bookDescription:
+        type: "string"
+      bookTitle:
+        type: "string"
+      bookAuthor:
+        type: "string"
+
+  DeleteBookResponse:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+      message:
+        type: "string"
+    example:
+      message: "message"
+      status: "status"
